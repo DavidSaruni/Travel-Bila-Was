@@ -1,0 +1,102 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">Our Services</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Travel Bila Was</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Bookings</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Solo Travel Booking Form</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5>Book for a Solo Travel</h5>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <form>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation">Pick Up Location</label>
+                                                                <input type="text" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
+
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">Destination</label>
+                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputNoSeats">Number of Seats</label>
+                                                                <input type="number" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
+                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTravelDate">Date of Travel</label>
+                                                                <input type="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTime">Time of Travel</label>
+                                                                <input type="time" class="form-control" id="inputTime" placeholder="Time of Travel">
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="amount">Amount</label>
+                                                                <input type="number" class="form-control" id="amount">
+                                                            </div>
+
+                        
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
