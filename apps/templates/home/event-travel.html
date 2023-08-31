@@ -45,46 +45,54 @@
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form>
+                                                    <form action="/event" method="POST">
                                                         <div class="row">
+                                                            <input type="text" name="activity" value="event_travel" hidden>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputLocation">Type of Event</label>
-                                                                <input type="text" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
+                                                                <input type="text" name="event_type" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
 
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">Pickup Location</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <input type="text" name="location" class="form-control" id="inputDestination" placeholder="Enter Destination">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">County of Destination</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <select name="destination" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                    <option selected>{{destination}}</option>
+                                                                    <option value="Nairobi">Nairobi</option>
+                                                                    <option value="Eldoret">Eldoret</option>
+                                                                    <option value="Nakuru">Nakuru</option>
+                                                                    <option value="Nyeri">Nyeri</option>
+                                                                    <option value="Nyahururu">Nyahururu</option>
+                                                                </select>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">Constituency</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <input type="text" name="constituency" class="form-control" id="inputDestination" placeholder="Enter Destination">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">Town</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <input type="text" name="town" class="form-control" id="inputDestination" placeholder="Enter Destination">
                                                             </div>
 
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputNoSeats">Number of Passengers</label>
-                                                                <input type="number" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
+                                                                <input type="number" name="matatu" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
                                                             
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputTravelDate">Date of Travel</label>
-                                                                <input type="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel">
+                                                                <input type="date" name="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputTime">Time of Travel</label>
-                                                                <input type="time" class="form-control" id="inputTime" placeholder="Time of Travel">
+                                                                <input type="time" name="time" class="form-control" id="inputTime" placeholder="Time of Travel">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="amount">Amount</label>
-                                                                <input type="number" class="form-control" id="amount">
+                                                                <input type="number" name="amount" class="form-control" id="amount" readonly>
                                                             </div>
 
                         
@@ -107,6 +115,44 @@
             
         </div>
     </div>
+
+    <script>
+        // Create a mapping of destination counties to amounts
+        const countyAmounts = {
+            Nairobi: 600,
+            Eldoret: 800,
+            Nakuru: 750,
+            Nyeri: 700,
+            Nyahururu: 900
+            // Add more counties and their respective amounts as needed
+        };
+    
+        function updateAmount() {
+            const selectElement = document.querySelector('select[name="destination"]');
+            const destination = selectElement.value;
+            const matatuElement = document.querySelector('input[name="matatu"]');
+            const matatus = parseInt(matatuElement.value);
+    
+            let amount = '';
+            if (destination && countyAmounts.hasOwnProperty(destination)) {
+                amount = countyAmounts[destination].toString();
+                if (matatus && matatus > 1) {
+                    amount = (countyAmounts[destination] * matatus).toString();
+                }
+            }
+    
+            const amountElement = document.querySelector('input[name="amount"]');
+            amountElement.value = amount;
+        }
+    
+        document.querySelector('select[name="destination"]').addEventListener('change', updateAmount);
+        document.querySelector('input[name="matatu"]').addEventListener('input', updateAmount);
+    
+        updateAmount(); 
+    </script>
+
+
+
     <!-- [ Main Content ] end -->
 
 {% endblock content %}

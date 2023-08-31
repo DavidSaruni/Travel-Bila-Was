@@ -19,7 +19,7 @@
                             <div class="row align-items-center">
                                 <div class="col-md-12">
                                     <div class="page-header-title">
-                                        <h5 class="m-b-10">Welcome David</h5>
+                                        <h5 class="m-b-10">Welcome {{current_user.username}}</h5>
                                     </div>
                                     <ul class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
@@ -474,77 +474,19 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                    {% for booking in bookings %}
                                                 <tr>
                                                     <td>
                                                         <h6 class="m-0"><img class="rounded-circle m-r-10"
                                                                                 style="width:40px;"
                                                                                 src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
+                                                                                alt="activity-user">{{current_user.username}}</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
+                                                        <h6 class="m-0">Solo_Travel</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0">3:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-2.jpg"
-                                                                                alt="activity-user">Albert Andersen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Jumps over the lazy</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">2:37 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-3.jpg"
-                                                                                alt="activity-user">Silje Larsen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Dog the quick brown</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">10:23 AM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">4:28 PM</h6>
+                                                        <h6 class="m-0">{{ booking.Time }}PM</h6>
                                                     </td>
                                                     <td>
                                                         <h6 class="m-0 text-c-green">Done</h6>
@@ -552,6 +494,7 @@
                                                     <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
                                                     </td>
                                                 </tr>
+                                                {% endfor %}
                                                 </tbody>
                                             </table>
 
@@ -574,7 +517,7 @@
                                                         <h6 class="m-0"><img class="rounded-circle  m-r-10"
                                                                                 style="width:40px;"
                                                                                 src="{{ config.ASSETS_ROOT }}/images/user/avatar-2.jpg"
-                                                                                alt="activity-user">Albert Andersen</h6>
+                                                                                alt="activity-user">{{current_user.username}}</h6>
                                                     </td>
                                                     <td>
                                                         <h6 class="m-0">Jumps over the lazy</h6>
@@ -667,7 +610,7 @@
                                                         <h6 class="m-0"><img class="rounded-circle  m-r-10"
                                                                                 style="width:40px;"
                                                                                 src="{{ config.ASSETS_ROOT }}/images/user/avatar-3.jpg"
-                                                                                alt="activity-user">Silje Larsen</h6>
+                                                                                alt="activity-user">{{current_user.username}}</h6>
                                                     </td>
                                                     <td>
                                                         <h6 class="m-0">Dog the quick brown</h6>

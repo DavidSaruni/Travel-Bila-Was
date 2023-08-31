@@ -45,24 +45,32 @@
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form>
+                                                    <form action="/Parcel" method="POST">
                                                         <div class="row">
+                                                            <input type="text" name="activity" value="Parcel_transport" hidden>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputLocation">Pick Up Location</label>
-                                                                <input type="text" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
+                                                                <input type="text" name="location" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location" required>
 
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">Destination</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <select class="form-control" name="destination" id="inputDestination" placeholder="Enter Destination" required>
+                                                                    <option selected>{{destination}}</option>
+                                                                    <option value="Nairobi">Nairobi</option>
+                                                                    <option value="Eldoret">Eldoret</option>
+                                                                    <option value="Nakuru">Nakuru</option>
+                                                                    <option value="Nyeri">Nyeri</option>
+                                                                    <option value="Nyahururu">Nyahururu</option>
+                                                                </select>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputNoSeats">Parcel Photo</label>
-                                                                <input type="number" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
+                                                                <input type="number" name="photo" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats" required>
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="amount">Amount</label>
-                                                                <input type="number" class="form-control" id="amount">
+                                                                <input type="number" name="amount" class="form-control" id="amount" readonly>
                                                             </div>
 
                         
@@ -87,7 +95,24 @@
     </div>
     <!-- [ Main Content ] end -->
 
+    <script>
+        function updateAmount() {
+            const selectElement = document.querySelector('select[name="destination"]');
+            const destination = selectElement.value;
+            let amount = '';
+            if (destination) {
+                amount = '600';
+            }
+            const amountElement = document.querySelector('input[name="amount"]');
+            amountElement.value = amount;
+        }
+    
+      
+        document.querySelector('select[name="destination"]').addEventListener('change', updateAmount);
+    
+        updateAmount();
+    </script>
+
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}

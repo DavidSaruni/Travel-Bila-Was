@@ -12,9 +12,11 @@ from flask_login import (
 from flask_dance.contrib.github import github
 
 from apps import db, login_manager
+from flask_login import current_user, login_required
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from apps.authentication.models import Users,Solo,Event,Institution,Parcel
+
 
 from apps.authentication.util import verify_pass
 
@@ -138,3 +140,140 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/solo', methods=['GET', 'POST'])
+@login_required
+def trip():
+    if request.method == 'POST':
+        pick_up = request.form['Location']
+        destination = request.form['destination']
+        seats = int(request.form['seats'])
+        date = request.form['TravelDate']
+        time = request.form['Time']
+        amount = int(request.form['amount'])
+
+        new_booking = Solo(
+            username=current_user.username,
+            Pick_Up=pick_up,
+            Destination=destination,
+            Seats=seats,
+            Date=date,
+            Time=time,
+            Amount=amount
+        )
+
+        try:
+            new_booking.save()  
+            return redirect(url_for('home_blueprint.index'))  
+        except Exception as e:
+            
+            print("Error:", str(e))
+
+    return render_template('home/solo-travel.html')  
+
+
+@blueprint.route('/event', methods=['GET', 'POST'])
+@login_required
+def event():
+    if request.method == 'POST':
+        event_type = request.form['event_type']
+        location = request.form['location']
+        destination = request.form['destination']
+        constituency= request.form['constituency']
+        town =request.form['town']
+        number_pass = int(request.form['matatu'])
+        date = request.form['date']
+        time = request.form['time']
+        amount = int(request.form['amount'])
+
+        new_booking = Event(
+            username=current_user.username,
+            location=location,
+            Destination=destination,
+            constituency=constituency,
+            town=town,
+            number_pass=number_pass,
+            Date=date,
+            Time=time,
+            Amount=amount
+        )
+
+        try:
+            new_booking.save()  
+            return redirect(url_for('home_blueprint.index'))  
+        except Exception as e:
+            
+            print("Error:", str(e))
+
+    return render_template('home/event-travel.html')  
+
+
+
+@blueprint.route('/Institution', methods=['GET', 'POST'])
+@login_required
+def institution():
+    if request.method == 'POST':
+        pick_up = request.form['location']
+        destination = request.form['destination']
+        seats = int(request.form['seats'])
+        date = request.form['date']
+        time = request.form['time']
+        amount = int(request.form['amount'])
+
+        new_booking = Institution(
+            username=current_user.username,
+            Pick_Up=pick_up,
+            Destination=destination,
+            Seats=seats,
+            Date=date,
+            Time=time,
+            Amount=amount
+        )
+
+        try:
+            new_booking.save()  
+            return redirect(url_for('home_blueprint.index'))  
+        except Exception as e:
+            
+            print("Error:", str(e))
+
+    return render_template('home/student-travel.html')  
+
+
+
+@blueprint.route('/Parcel', methods=['GET', 'POST'])
+@login_required
+def parcel():
+    if request.method == 'POST':
+        pick_up = request.form['location']
+        destination = request.form['destination']
+        photo = int(request.form['photo'])
+        amount = int(request.form['amount'])
+
+        new_booking = Parcel(
+            username=current_user.username,
+            Pick_Up=pick_up,
+            Destination=destination,
+            photo=photo,
+            Amount=amount
+        )
+
+        try:
+            new_booking.save()  
+            return redirect(url_for('home_blueprint.index'))  
+        except Exception as e:
+            
+            print("Error:", str(e))
+
+    return render_template('home/parcel-transport.html')  
+
+
+
+
+
+@blueprint.route('/index')
+@login_required
+def index():
+    user_bookings = Solo.query.filter_by(username=current_user.username).all()
+    return render_template('home/index.html', bookings=user_bookings)

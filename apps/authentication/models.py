@@ -87,3 +87,109 @@ def request_loader(request):
 class OAuth(OAuthConsumerMixin, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"), nullable=False)
     user = db.relationship(Users)
+
+
+class Solo(db.Model):
+
+    __tablename__ = 'solo'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    Pick_Up       = db.Column(db.String(64))
+    Destination   = db.Column(db.String(100))
+    Seats         = db.Column(db.Integer)
+    Date          = db.Column(db.String(10))
+    Time          = db.Column(db.String(10))
+    Amount        = db.Column(db.Integer)
+
+    def save(self) -> None:
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+    def __repr__(self):
+        return f"Solo(id={self.id}, username={self.username}, Pick_Up={self.Pick_Up}, Destination={self.Destination}, Seats={self.Seats}, Date={self.Date}, Time={self.Time}, Amount={self.Amount})"
+
+
+class Event(db.Model):
+
+    __tablename__ = 'event'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    event_type       = db.Column(db.String(64))
+    location   = db.Column(db.String(100))
+    Destination   = db.Column(db.String(100))
+    constituency  = db.Column(db.String(100))
+    town           = db.Column(db.String(100))  
+    number_pass         = db.Column(db.Integer)
+    Date          = db.Column(db.String(10))
+    Time          = db.Column(db.String(10))
+    Amount        = db.Column(db.Integer)
+
+    def save(self) -> None:
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+    def __repr__(self):
+        return str(self.event_type)
+
+
+class Institution(db.Model):
+
+    __tablename__ = 'institution'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    Pick_Up       = db.Column(db.String(64))
+    Destination   = db.Column(db.String(100))
+    Seats         = db.Column(db.Integer)
+    Date          = db.Column(db.String(10))
+    Time          = db.Column(db.String(10))
+    Amount        = db.Column(db.Integer)
+
+    def save(self) -> None:
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+    def __repr__(self):
+        return str(self.Pick_Up)
+
+
+
+class Parcel(db.Model):
+
+    __tablename__ = 'parcel'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    Pick_Up       = db.Column(db.String(64))
+    Destination   = db.Column(db.String(100))
+    photo         = db.Column(db.String(100))
+    Amount        = db.Column(db.Integer)
+
+    def save(self) -> None:
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+    def __repr__(self):
+        return str(self.Pick_Up)

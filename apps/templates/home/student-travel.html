@@ -45,33 +45,34 @@
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form>
+                                                    <form action="/Institution" method="POST">
                                                         <div class="row">
+                                                            <input type="text" name="activity" value="student_travel" hidden>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputLocation">Pick Up Location</label>
-                                                                <input type="text" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
+                                                                <input type="text" name="location" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
 
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputDestination">Destination</label>
-                                                                <input type="text" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                <input type="text" name="destination" class="form-control" id="inputDestination" placeholder="Enter Destination">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputNoSeats">Number of Seats</label>
-                                                                <input type="number" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
+                                                                <input type="number" name="seats" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats">
                                                             
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputTravelDate">Date of Travel</label>
-                                                                <input type="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel">
+                                                                <input type="date" name="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputTime">Time of Travel</label>
-                                                                <input type="time" class="form-control" id="inputTime" placeholder="Time of Travel">
+                                                                <input type="time" name="time" class="form-control" id="inputTime" placeholder="Time of Travel">
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="amount">Amount</label>
-                                                                <input type="number" class="form-control" id="amount">
+                                                                <input type="number" name="amount" class="form-control" id="amount">
                                                             </div>
 
                         
