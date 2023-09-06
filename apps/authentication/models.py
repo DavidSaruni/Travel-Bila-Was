@@ -12,11 +12,12 @@ from apps import db, login_manager
 
 from apps.authentication.util import hash_pass
 
-class Users(db.Model, UserMixin):
+class User(db.Model, UserMixin):
 
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id            = db.Column(db.Integer, primary_key=True)
+    role          = db.Column(db.String(30),nullable=True)
     username      = db.Column(db.String(64), unique=True)
     email         = db.Column(db.String(64), unique=True)
     password      = db.Column(db.LargeBinary)
@@ -41,15 +42,15 @@ class Users(db.Model, UserMixin):
         return str(self.username)
 
     @classmethod
-    def find_by_email(cls, email: str) -> "Users":
+    def find_by_email(cls, email: str) -> "User":
         return cls.query.filter_by(email=email).first()
 
     @classmethod
-    def find_by_username(cls, username: str) -> "Users":
+    def find_by_username(cls, username: str) -> "User":
         return cls.query.filter_by(username=username).first()
     
     @classmethod
-    def find_by_id(cls, _id: int) -> "Users":
+    def find_by_id(cls, _id: int) -> "User":
         return cls.query.filter_by(id=_id).first()
    
     def save(self) -> None:
@@ -76,17 +77,17 @@ class Users(db.Model, UserMixin):
 
 @login_manager.user_loader
 def user_loader(id):
-    return Users.query.filter_by(id=id).first()
+    return User.query.filter_by(id=id).first()
 
 @login_manager.request_loader
 def request_loader(request):
     username = request.form.get('username')
-    user = Users.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()
     return user if user else None
 
 class OAuth(OAuthConsumerMixin, db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"), nullable=False)
-    user = db.relationship(Users)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="cascade"), nullable=False)
+    user = db.relationship(User)
 
 
 class Solo(db.Model):
@@ -94,7 +95,7 @@ class Solo(db.Model):
     __tablename__ = 'solo'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     Seats         = db.Column(db.Integer)
@@ -120,7 +121,7 @@ class Event(db.Model):
     __tablename__ = 'event'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
     event_type       = db.Column(db.String(64))
     location   = db.Column(db.String(100))
     Destination   = db.Column(db.String(100))
@@ -149,7 +150,7 @@ class Institution(db.Model):
     __tablename__ = 'institution'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     Seats         = db.Column(db.Integer)
@@ -176,7 +177,7 @@ class Parcel(db.Model):
     __tablename__ = 'parcel'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('users.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     photo         = db.Column(db.String(100))
@@ -193,3 +194,31 @@ class Parcel(db.Model):
 
     def __repr__(self):
         return str(self.Pick_Up)
+
+
+
+class Profile(db.Model):
+
+    __tablename__ = 'profile'
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
+    email         = db.Column(db.String(64), db.ForeignKey('user.email'), nullable=False)
+    firstName     = db.Column(db.String(64))
+    lastName      = db.Column(db.String(100))
+    address       = db.Column(db.String(100))
+    image       =db.Column(db.BLOB)
+    bio       = db.Column(db.String(300))
+
+    def save(self) -> None:
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+    def __repr__(self):
+        return str(self.bio)
+

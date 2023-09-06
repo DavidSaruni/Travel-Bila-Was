@@ -23,11 +23,12 @@
                                             <h5>Edit Info</h5>
                                         </div>
                                         <div class="card-block">
+                                            <form action="/profile.html"  method="POST" enctype="multipart/form-data">
                                             <div class="row">
                                                 <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label for="exampleInputUsername">Username</label>
-                                                        <input class="form-control" id="exampleInputUsername" readonly 
+                                                        <input class="form-control" id="exampleInputUsername" name="username" readonly 
                                                                value="{{ current_user.username }}"
                                                                aria-describedby="userHelp" placeholder="Enter email">
                                                     </div>
@@ -37,7 +38,7 @@
                                                         <label {% if not current_user.email %} class="text-danger" {% endif %} 
                                                                for="exampleInputEmail1">Email address</label>
                                                         <input type="email"
-                                                               {% if current_user.email %} readonly value="{{ current_user.email }}" {% endif %}  
+                                                               {% if current_user.email %} name="email" readonly value="{{ current_user.email }}" {% endif %}  
                                                                class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                                         {% if not current_user.email %}       
                                                             <small id="emailHelp" class="form-text text-danger">
@@ -49,26 +50,32 @@
                                                 <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label for="fn">First Name</label>
-                                                        <input type="email" class="form-control" id="fn" aria-describedby="emailHelp" placeholder="Your name">
+                                                        <input type="text" name="fname" value="{{data.firstName}}"  class="form-control" id="fn" aria-describedby="emailHelp" required placeholder="Your name">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label for="ln">Last Name</label>
-                                                        <input type="email" class="form-control" id="ln" aria-describedby="emailHelp" placeholder="Your last name">
+                                                        <input type="text" name="lname" value="{{data.lastName}}" class="form-control" id="ln" required aria-describedby="emailHelp" placeholder="Your last name">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12 mb-4">
+                                                <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label for="add">Address</label>
-                                                        <input type="email" class="form-control" id="add" aria-describedby="emailHelp" placeholder="Full address here">
-                                                        <small id="addd" class="form-text text-muted">This is your shipments address</small>
+                                                        <input type="text" name="address" value="{{data.address}}" class="form-control" id="add" required aria-describedby="emailHelp" placeholder="Full address here">
+                                                        <small id="addd"  class="form-text text-muted">This is your shipments address</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 mb-4">
+                                                    <div class="form-group">
+                                                        <label for="add">Your profile_image</label>
+                                                        <input type="file" value="{{data.image}}" name="photo" class="form-control" required id="add" aria-describedby="emailHelp" placeholder="Full address here">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="form-group">
                                                         <label for="abt">About Info</label>
-                                                        <textarea type="email" class="form-control" id="abt" aria-describedby="emailHelp" placeholder="Bio"></textarea>
+                                                        <textarea type="text"  name="bio" required class="form-control" id="abt" aria-describedby="emailHelp" placeholder="Bio">{{data.bio}}</textarea>
                                                         <small id="abf" class="form-text text-muted">We'll show this on your profile.</small>
                                                     </div>
                                                 </div>
@@ -78,7 +85,7 @@
                                                         <button type="submit" class="btn btn-primary">Submit</button>
                                                     </div>
                                                 </div>                                                
-                                                
+                                            </form>
                                             </div>
                                         </div>
                                     </div>
@@ -88,8 +95,12 @@
                                         <div class="card-block">
                                             <div class="d-flex align-items-center justify-content-center flex-column">
                                                 <div class="w-50 p-3">
+                                                    {% if image_base64 %}
+                                                    <img src="data:image/jpeg;base64, {{image_base64|safe}}" style="border-radius: 50%;" height="100" width="100">
+                                                    {% else %}
                                                     <img src="{{ config.ASSETS_ROOT }}/images/user/profile.jpg" alt="profile image"
                                                         class="img-fluid rounded-circle">
+                                                    {% endif %}
                                                 </div>
                                                 <div class="text-center">
                                                     <h4 class="font-weight-bold h6">

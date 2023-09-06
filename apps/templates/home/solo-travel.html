@@ -47,7 +47,7 @@
                                                 <div class="col-md-12">
                                                     <form action="/solo" method="POST">
                                                         <div class="row">
-                                                                <input type="text" name="activity" value="Trip_travel" hidden class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location">
+                                                                <input type="text" name="activity" value="Trip_travel" hidden class="form-control" id="inputLocation" aria-describedby="locationHelp" required placeholder="Enter Pick Up Location">
                                                             <div class="form-group col-md-6">
                                                                 <label for="inputLocation">Pick-Up Location</label>
                                                                 <input type="text" name="Location" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location" required>
@@ -80,7 +80,7 @@
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="amount">Amount</label>
-                                                                <input type="number" name="amount" class="form-control" id="amount" readonly value="{{amount}}">
+                                                                <input type="number" name="amount" class="form-control" id="amount" readonly value="{{amount}}" required>
                                                             </div>
 
                         
