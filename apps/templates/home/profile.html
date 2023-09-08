@@ -72,11 +72,17 @@
                                                         <input type="file" value="{{data.image}}" name="photo" class="form-control" required id="add" aria-describedby="emailHelp" placeholder="Full address here">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-12 mb-4">
+                                                <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label for="abt">About Info</label>
                                                         <textarea type="text"  name="bio" required class="form-control" id="abt" aria-describedby="emailHelp" placeholder="Bio">{{data.bio}}</textarea>
                                                         <small id="abf" class="form-text text-muted">We'll show this on your profile.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 mb-4">
+                                                    <div class="form-group">
+                                                        <label for="ln">Phone</label>
+                                                        <input type="phone" name="phone" value="{{data.phone}}" class="form-control" id="ln" required aria-describedby="emailHelp" placeholder="Your phone number">
                                                     </div>
                                                 </div>
 

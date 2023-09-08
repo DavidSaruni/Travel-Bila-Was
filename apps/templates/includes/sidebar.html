@@ -17,7 +17,7 @@
                 </li>
                 <li data-username="dashboard Dashboard Page" 
                     class="nav-item {% if 'index' in segment %} active {% endif %}">
-                    <a href="/" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                    <a href="/index" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Dashboard</span></a>
                 </li>
                 <li data-username="Profile Page" 
@@ -44,14 +44,11 @@
                     <label>Reports</label>
                 </li> -->
                 </li>
-                <li data-username="Table bootstrap datatable footable" 
-                    class="nav-item {% if 'tbl_bootstrap' in segment %} active {% endif %}">
-                    <a href="/tbl_bootstrap.html" class="nav-link "><span class="pcoded-micon"><i
-                            class="feather icon-server"></i></span><span class="pcoded-mtext">Table</span></a>
-                </li>
+                
                 <!-- <li class="nav-item pcoded-menu-caption">
                     <label>Pages</label>
                 </li> -->
+                {% if current_user.role=="Admin" %}
                 <li data-username="Authentication Sign up Sign in reset password Change password Personal information profile settings map form subscribe"
                     class="nav-item pcoded-hasmenu">
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span
@@ -61,6 +58,7 @@
                         <li class=""><a href="/login.html" class="" target="_blank">Login</a></li>
                     </ul>
                 </li>
+                {% endif %}
 
                 <li data-username="Sample Page" class="nav-item"><a href="/page-blank.html" class="nav-link"><span
                         class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Explore</span></a>

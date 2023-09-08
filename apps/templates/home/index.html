@@ -19,10 +19,14 @@
                             <div class="row align-items-center">
                                 <div class="col-md-12">
                                     <div class="page-header-title">
-                                        <h5 class="m-b-10">Welcome, {{current_user.username}}</h5>
+                                        {% if current_user.role=="Admin" %}
+                                        <h5 class="m-b-10">Welcome, {{current_user.username}} below is the customer's booking history</h5>
+                                        {% else %}
+                                        <h5 class="m-b-10">Welcome, {{current_user.username}} this is your booking history</h5>
+                                        {% endif %}
                                     </div>
                                     <ul class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>/Bookings
                                     </ul>
                                 </div>
                             </div>
@@ -132,12 +136,15 @@
                                         <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
                                             <table class="table table-hover">
                                                 <thead>
+                                                    
+                                                    {% if bookings %}
                                                 <tr>
                                                     <th>User</th>
                                                     <th>Activity</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th>Make_payment</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -156,12 +163,25 @@
                                                         <h6 class="m-0">{{ booking.Time }}PM</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
+                                                        <h6 class="m-0 text-c-green">{{ booking.status }}</h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                    <td class="text-right">
+                                                        {% if booking.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif booking.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
                                                     </td>
+                                                    <td><a href="/pay/{{booking.id}}/solo" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
+                                                {% else %}
+                                                <h3>You have not yet made any bookings for Solo travel</h3>
+                                                <h5>Click the link below to make your booking</h5>
+                                                <a class="btn btn-primary" href="/solo">book Now !</a>
+                                                {% endif %}
                                                 </tbody>
                                             </table>
 
@@ -170,15 +190,18 @@
                                                 aria-labelledby="profile-tab">
                                             <table class="table table-hover">
                                                 <thead>
+                                                    {% if institution %}
                                                 <tr>
                                                     <th>User</th>
                                                     <th>Activity</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th>Make_payment</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                   
                                                     {% for row in institution %}
                                                 <tr>
                                                     <td>
@@ -193,13 +216,28 @@
                                                     <td>
                                                         <h6 class="m-0">{{row.Time}} PM</h6>
                                                     </td>
+                                                    
                                                     <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
+                                                        <h6 class="m-0 text-c-green">{{ row.status }}</h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
+                                                    <td class="text-right">
+                                                        {% if row.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif row.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
                                                     </td>
+                                                    </td>
+                                                    <td><a href="/pay/{{row.id}}/institution" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
+                                                {% else %}
+                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Institution travel</h3>
+                                                <h5>Click the button below to make your booking</h5>
+                                                <a class="btn btn-primary" href="/Institution">book Now !</a>
+                                                {% endif %}
                                                 </tbody>
                                             </table>
 
@@ -208,12 +246,14 @@
                                                 aria-labelledby="contact-tab">
                                             <table class="table table-hover">
                                                 <thead>
+                                                    {% if event_info %}
                                                 <tr>
                                                     <th>User</th>
                                                     <th>Activity</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th>Make_payment</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -231,25 +271,40 @@
                                                     <td>
                                                         <h6 class="m-0">{{data.Time}}</h6>
                                                     </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
+                                                    <td class="text-right">
+                                                        {% if data.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
                                                     </td>
                                                     <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
                                                     </td>
+                                                    <td><a href="/pay/{{data.id}}/event" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
+                                                {% else %}
+                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Event travel</h3>
+                                                <h5>Click the button below to make your booking</h5>
+                                                <a class="btn btn-primary" href="/event">book Now !</a>
+                                                {% endif %}
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="parcel" role="tabpanel" aria-labelledby="home-tab">
                                             <table class="table table-hover">
                                                 <thead>
+                                                    {% if parcel_info %}
                                                 <tr>
                                                     <th>User</th>
                                                     <th>Activity</th>
                                                     <th>Pick_Up</th>
+                                                    <th>Parcel Photo</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th>Make_payment</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -268,12 +323,29 @@
                                                         <h6 class="m-0">{{ data.Pick_Up }}</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
+                                                        <img src="data:image/jpeg;base64, {{data.photo}}" style="border-radius: 50%;" height="50" width="50">
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ data.status }}</h6>
                                                     </td>
+                                                    <td class="text-right">
+                                                        {% if data.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    
+                                                    <td><a href="/pay/{{data.id}}/parcel" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
+                                                {% else %}
+                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Parcel Sending</h3>
+                                                <h5>Click the button below to make your booking</h5>
+                                                <a class="btn btn-primary" href="/parcel">book Now !</a>
+                                                {% endif %}
                                                 </tbody>
                                             </table>
 
@@ -297,16 +369,27 @@
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                     {% for bookings in all_user_bookings %}
                                                 <tr>
                                                     <td>
-                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
+                                                        {% if image_base64 %}
+                                                        <h6 class="m-0">
+                                                        <img src="data:image/jpeg;base64, {{image_base64|safe}}" style="border-radius: 50%;" height="40" width="40">
+                                                        {{bookings.username}}</h6>
+                                                        {% else %}
+                                                        <h6 class="m-0">
+                                                        <img src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"style="border-radius: 50%;" height="40" width="40" alt="profile image"
+                                                            class="img-fluid rounded-circle">
+                                                            {{bookings.username}}</h6>
+                                                        {% endif %}
+                                                        <!-- <h6 class="m-0"><img class="rounded-circle m-r-10"
                                                                                 style="width:40px;"
                                                                                 src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">{{bookings.username}}</h6>
+                                                                                alt="activity-user">{{bookings.username}}</h6> -->
                                                     </td>
                                                     <td>
                                                         <h6 class="m-0">Solo_Travel</h6>
@@ -315,9 +398,19 @@
                                                         <h6 class="m-0">{{ bookings.Time }}PM</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
+                                                        <h6 class="m-0 text-c-green">{{ bookings.status }}</h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                    <td class="text-right">
+                                                        {% if bookings.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif bookings.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{bookings.id}}/solo" class="btn btn-outline-success">Approve/Decline</a>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -335,6 +428,7 @@
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -353,9 +447,19 @@
                                                         <h6 class="m-0">{{row.Time}} PM</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
+                                                        <h6 class="m-0 text-c-purple">{{row.status}}</h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
+                                                    <td class="text-right">
+                                                        {% if row.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif row.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{row.id}}/institution" class="btn btn-outline-success">Approve/Decline</a>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -373,6 +477,7 @@
                                                     <th>Time</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -391,9 +496,19 @@
                                                         <h6 class="m-0">{{data.Time}}</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
+                                                        <h6 class="m-0 text-c-purple">{{data.status}}</h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
+                                                    <td class="text-right">
+                                                        {% if data.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{data.id}}/event" class="btn btn-outline-success">Approve/Decline</a>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -407,8 +522,10 @@
                                                     <th>User</th>
                                                     <th>Activity</th>
                                                     <th>Pick_Up</th>
+                                                    <th>Parcel Photo</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -418,7 +535,7 @@
                                                         <h6 class="m-0"><img class="rounded-circle m-r-10"
                                                                                 style="width:40px;"
                                                                                 src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">{{current_user.username}}</h6>
+                                                                                alt="activity-user">{{data.username}}</h6>
                                                     </td>
                                                     <td>
                                                         <h6 class="m-0">Parcel sending</h6>
@@ -427,9 +544,22 @@
                                                         <h6 class="m-0">{{ data.Pick_Up }}</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
+                                                        <img src="data:image/jpeg;base64, {{data.photo}}" style="border-radius: 50%;" height="50" width="50">
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ data.status }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if data.status=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data.status=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{data.id}}/parcel" class="btn btn-outline-success">Approve/Decline</a>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

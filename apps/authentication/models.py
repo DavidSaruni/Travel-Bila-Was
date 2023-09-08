@@ -90,9 +90,9 @@ class OAuth(OAuthConsumerMixin, db.Model):
     user = db.relationship(User)
 
 
-class Solo(db.Model):
+class Solos(db.Model):
 
-    __tablename__ = 'solo'
+    __tablename__ = 'trip'
 
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
@@ -102,6 +102,7 @@ class Solo(db.Model):
     Date          = db.Column(db.String(10))
     Time          = db.Column(db.String(10))
     Amount        = db.Column(db.Integer)
+    status        =db.Column(db.String(10),default="Pending")
 
     def save(self) -> None:
         try:
@@ -118,7 +119,7 @@ class Solo(db.Model):
 
 class Event(db.Model):
 
-    __tablename__ = 'event'
+    __tablename__ = 'event_table'
 
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
@@ -131,6 +132,7 @@ class Event(db.Model):
     Date          = db.Column(db.String(10))
     Time          = db.Column(db.String(10))
     Amount        = db.Column(db.Integer)
+    status        =db.Column(db.String(10),default="Pending")
 
     def save(self) -> None:
         try:
@@ -147,7 +149,7 @@ class Event(db.Model):
 
 class Institution(db.Model):
 
-    __tablename__ = 'institution'
+    __tablename__ = 'institution_table'
 
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
@@ -157,6 +159,7 @@ class Institution(db.Model):
     Date          = db.Column(db.String(10))
     Time          = db.Column(db.String(10))
     Amount        = db.Column(db.Integer)
+    status        =db.Column(db.String(10),default="Pending")
 
     def save(self) -> None:
         try:
@@ -174,14 +177,15 @@ class Institution(db.Model):
 
 class Parcel(db.Model):
 
-    __tablename__ = 'parcel'
+    __tablename__ = 'parcel_tables'
 
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
-    photo         = db.Column(db.String(100))
+    photo         =db.Column(db.BLOB)
     Amount        = db.Column(db.Integer)
+    status        =db.Column(db.String(10),default="Pending")
 
     def save(self) -> None:
         try:
@@ -199,7 +203,7 @@ class Parcel(db.Model):
 
 class Profile(db.Model):
 
-    __tablename__ = 'profile'
+    __tablename__ = 'profile_table'
 
     id            = db.Column(db.Integer, primary_key=True)
     username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
@@ -209,6 +213,7 @@ class Profile(db.Model):
     address       = db.Column(db.String(100))
     image       =db.Column(db.BLOB)
     bio       = db.Column(db.String(300))
+    phone      = db.Column(db.String(100))
 
     def save(self) -> None:
         try:
