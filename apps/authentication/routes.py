@@ -82,7 +82,6 @@ def register():
 
         username = request.form['username']
         email = request.form['email']
-        role = request.form['role']
 
         # Check usename exists
         user = User.query.filter_by(username=username).first()
