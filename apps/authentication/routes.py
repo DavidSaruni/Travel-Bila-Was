@@ -9,13 +9,14 @@ from flask_login import (
     login_user,
     logout_user
 )
+import base64
 from flask_dance.contrib.github import github
 
 from apps import db, login_manager
 from flask_login import current_user, login_required
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users,Solo,Event,Institution,Parcel
+from apps.authentication.models import User,Solos,Event,Institution,Parcel,Profile
 
 
 from apps.authentication.util import verify_pass
@@ -45,12 +46,12 @@ def login():
         password = request.form['password']
 
         # Locate user
-        user = Users.find_by_username(user_id)
+        user = User.find_by_username(user_id)
 
         # if user not found
         if not user:
 
-            user = Users.find_by_email(user_id)
+            user = User.find_by_email(user_id)
 
             if not user:
                 return render_template( 'accounts/login.html',
@@ -71,7 +72,7 @@ def login():
     if not current_user.is_authenticated:
         return render_template('accounts/login.html',
                                form=login_form)
-    return redirect(url_for('home_blueprint.index'))
+    return redirect(url_for('authentication_blueprint.explore'))
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -81,9 +82,10 @@ def register():
 
         username = request.form['username']
         email = request.form['email']
+        role = request.form['role']
 
         # Check usename exists
-        user = Users.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
         if user:
             return render_template('accounts/register.html',
                                    msg='Username already registered',
@@ -91,7 +93,7 @@ def register():
                                    form=create_account_form)
 
         # Check email exists
-        user = Users.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             return render_template('accounts/register.html',
                                    msg='Email already registered',
@@ -99,7 +101,7 @@ def register():
                                    form=create_account_form)
 
         # else we can create the user
-        user = Users(**request.form)
+        user = User(**request.form)
         db.session.add(user)
         db.session.commit()
 
@@ -153,7 +155,7 @@ def trip():
         time = request.form['Time']
         amount = int(request.form['amount'])
 
-        new_booking = Solo(
+        new_booking = Solos(
             username=current_user.username,
             Pick_Up=pick_up,
             Destination=destination,
@@ -248,7 +250,7 @@ def parcel():
     if request.method == 'POST':
         pick_up = request.form['location']
         destination = request.form['destination']
-        photo = int(request.form['photo'])
+        photo = request.files['photo'].read()
         amount = int(request.form['amount'])
 
         new_booking = Parcel(
@@ -270,10 +272,194 @@ def parcel():
 
 
 
+@blueprint.route('/profile.html', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        address = request.form['address']
+        bio = request.form['bio']
+        photo = request.files['photo'].read()
+        phone=request.form['phone']
 
+        record = Profile.query.filter_by(username=current_user.username).first()
+
+        if record is not None:
+            # Update the existing user profile
+            record.username = current_user.username
+            record.email = current_user.email
+            record.firstName = fname
+            record.lastName = lname
+            record.address = address
+            record.bio = bio
+            record.image = photo
+            record.phone=phone
+
+            try:
+                db.session.commit()
+            except Exception as e:
+                print("Error:", str(e))
+                db.session.rollback()
+        else:
+            # Create a new user profile
+            new_profile = Profile(
+                username=current_user.username,
+                email=current_user.email,
+                firstName=fname,
+                lastName=lname,
+                address=address,
+                image=photo,
+                bio=bio,
+                phone=phone
+            )
+
+            try:
+                db.session.add(new_profile)
+                db.session.commit()
+            except Exception as e:
+                print("Error:", str(e))
+                db.session.rollback()
+
+    # Retrieve the updated or newly created profile record
+    data = Profile.query.filter_by(username=current_user.username).first()
+    if data:
+        image=data.image
+        image_base64=base64.b64encode(image).decode('utf-8')
+        if data.image:
+            return render_template('home/profile.html', data=data,image_base64=image_base64)
+        
+    return render_template('home/profile.html', data=data)
+
+
+
+import base64
 
 @blueprint.route('/index')
 @login_required
 def index():
-    user_bookings = Solo.query.filter_by(username=current_user.username).all()
-    return render_template('home/index.html', bookings=user_bookings)
+    user_bookings = Solos.query.filter_by(username=current_user.username).all()
+    data = Institution.query.filter_by(username=current_user.username).all()
+    event_info = Event.query.filter_by(username=current_user.username).all()
+    parcel_info = Parcel.query.filter_by(username=current_user.username).all()
+
+    all_user_bookings = Solos.query.all()
+    count = len(all_user_bookings)
+    all_data = Institution.query.all()
+    count2 = len(all_data)
+    all_event_info = Event.query.all()
+    count3 = len(all_event_info)
+    all_parcel_info = Parcel.query.all()
+    count4 = len(all_parcel_info)
+
+    count = count + count2 + count3 + count4
+    per_cent = int(count / 50 * 100)
+
+    modified_data = []
+    for item in parcel_info:
+        image_data = item.photo
+        image_data_base64 = base64.b64encode(image_data).decode('utf-8')
+        modified_item = item.__dict__.copy()  # Create a copy of the object's attributes
+        modified_item['photo'] = image_data_base64  # Modify the 'photo' attribute
+        modified_data.append(modified_item)
+
+
+    all_modified_data = []
+    for item in all_parcel_info:
+        image_data = item.photo
+        image_data_base64 = base64.b64encode(image_data).decode('utf-8')
+        modified_item = item.__dict__.copy()  
+        modified_item['photo'] = image_data_base64  
+        all_modified_data.append(modified_item)
+
+
+    return render_template('home/index.html', count=count, per_cent=per_cent, bookings=user_bookings,
+                           institution=data, event_info=event_info, parcel_info=modified_data, all_data=all_data,
+                           all_event_info=all_event_info, all_parcel_info=all_modified_data,
+                           all_user_bookings=all_user_bookings)
+
+@blueprint.route('/page-blank.html')
+@login_required
+def explore():
+    return render_template('home/page-blank.html')
+
+
+
+@blueprint.route('/status/<id>/<table>',methods=['POST','GET'])
+@login_required
+def Status(id,table):
+    if request.method == 'POST':
+        status = request.form['status']
+        
+        if table=="solo":
+            record = Solos.query.filter_by(id=id).first()
+
+            if record is not None:
+                record.status = status
+                
+                try:
+                    db.session.commit()
+                    return redirect(url_for('home_blueprint.index'))
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+        elif table=="institution":
+            record = Institution.query.filter_by(id=id).first()
+
+            if record is not None:
+                record.status = status
+                
+                try:
+                    db.session.commit()
+                    return redirect(url_for('home_blueprint.index'))
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+        
+        elif table=="event":
+            record = Event.query.filter_by(id=id).first()
+
+            if record is not None:
+                record.status = status
+                
+                try:
+                    db.session.commit()
+                    return redirect(url_for('home_blueprint.index'))
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+
+        elif table=="parcel":
+            record = Parcel.query.filter_by(id=id).first()
+
+            if record is not None:
+                record.status = status
+                
+                try:
+                    db.session.commit()
+                    return redirect(url_for('home_blueprint.index'))
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+    return render_template('home/status.html')
+
+@blueprint.route('/pay/<id>/<table>',methods=['POST','GET'])
+@login_required
+def Payment(id,table):
+    if table=="solo":
+        record = Solos.query.filter_by(id=id).first()
+        data= Profile.query.filter_by(username=current_user.username).first()
+    
+    elif table=="event":
+        record = Event.query.filter_by(id=id).first()
+        data= Profile.query.filter_by(username=current_user.username).first()
+
+    elif table=="institution":
+        record = Institution.query.filter_by(id=id).first()
+        data= Profile.query.filter_by(username=current_user.username).first()
+
+    elif table=="parcel":
+        record = Parcel.query.filter_by(id=id).first()
+        data= Profile.query.filter_by(username=current_user.username).first()
+
+    return render_template('home/pay.html',record=record,data=data)

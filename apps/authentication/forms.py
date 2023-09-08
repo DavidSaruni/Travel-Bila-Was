@@ -20,6 +20,9 @@ class LoginForm(FlaskForm):
 
 
 class CreateAccountForm(FlaskForm):
+    role = StringField('role',
+                         id='role_create',
+                         validators=[DataRequired()])
     username = StringField('Username',
                          id='username_create',
                          validators=[DataRequired()])
