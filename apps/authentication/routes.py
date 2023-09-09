@@ -143,7 +143,7 @@ def internal_error(error):
     return render_template('home/page-500.html'), 500
 
 
-@blueprint.route('/solo', methods=['GET', 'POST'])
+@blueprint.route('/soloservice', methods=['GET', 'POST'])
 @login_required
 def trip():
     if request.method == 'POST':
@@ -174,7 +174,7 @@ def trip():
     return render_template('home/solo-travel.html')  
 
 
-@blueprint.route('/event', methods=['GET', 'POST'])
+@blueprint.route('/eventservice', methods=['GET', 'POST'])
 @login_required
 def event():
     if request.method == 'POST':
@@ -211,7 +211,7 @@ def event():
 
 
 
-@blueprint.route('/Institution', methods=['GET', 'POST'])
+@blueprint.route('/institutionservice', methods=['GET', 'POST'])
 @login_required
 def institution():
     if request.method == 'POST':
@@ -243,7 +243,7 @@ def institution():
 
 
 
-@blueprint.route('/Parcel', methods=['GET', 'POST'])
+@blueprint.route('/parcelservice', methods=['GET', 'POST'])
 @login_required
 def parcel():
     if request.method == 'POST':
@@ -271,7 +271,7 @@ def parcel():
 
 
 
-@blueprint.route('/profile.html', methods=['GET', 'POST'])
+@blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     if request.method == 'POST':
@@ -377,10 +377,10 @@ def index():
                            all_event_info=all_event_info, all_parcel_info=all_modified_data,
                            all_user_bookings=all_user_bookings)
 
-@blueprint.route('/page-blank.html')
+@blueprint.route('/home')
 @login_required
 def explore():
-    return render_template('home/page-blank.html')
+    return render_template('home/explore.html')
 
 
 
