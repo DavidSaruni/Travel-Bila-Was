@@ -153,7 +153,7 @@
                                                     <td>
                                                         <h6 class="m-0"><img class="rounded-circle m-r-10"
                                                                                 style="width:40px;"
-                                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-1.jpg"
+                                                                                src="{{ config.ASSETS_ROOT }}/images/user/avatar-2.jpg"
                                                                                 alt="activity-user">{{booking.username}}</h6>
                                                     </td>
                                                     <td>
@@ -171,16 +171,18 @@
                                                         {% elif booking.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     <td><a href="/pay/{{booking.id}}/solo" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
                                                 {% else %}
-                                                <h3>You have not yet made any bookings for Solo travel</h3>
-                                                <h5>Click the link below to make your booking</h5>
-                                                <a class="btn btn-primary" href="/solo">book Now !</a>
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">Embark on Your Solo Adventure</h2>
+                                                    <p class="empty-booking-description">It looks like you haven't made any bookings for solo travel yet. Don't miss the chance to explore the world on your own terms. Click the link below to make your booking now!</p>
+                                                    <a class="btn btn-primary" href="/soloservice">Book Now</a>
+                                                </section>
                                                 {% endif %}
                                                 </tbody>
                                             </table>
@@ -226,7 +228,7 @@
                                                         {% elif row.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     </td>
@@ -234,9 +236,13 @@
                                                 </tr>
                                                 {% endfor %}
                                                 {% else %}
-                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Institution travel</h3>
-                                                <h5>Click the button below to make your booking</h5>
-                                                <a class="btn btn-primary" href="/Institution">book Now !</a>
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">Plan Your Institution or Student Travel</h2>
+                                                    <p class="empty-booking-description">It appears you haven't made any bookings for institution or student travel yet. Whether it's for educational purposes or student adventures, we've got you covered. Click the link below to make your booking now!</p>
+                                                    <a class="btn btn-primary" href="/institutionstudentservice">Book Now</a>
+                                                </section>
+                                                
+                                                
                                                 {% endif %}
                                                 </tbody>
                                             </table>
@@ -277,18 +283,21 @@
                                                         {% elif data.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
+                                                    <td class="text-right">
                                                     </td>
                                                     <td><a href="/pay/{{data.id}}/event" class="btn btn-outline-success">Pay</a></td>
                                                 </tr>
                                                 {% endfor %}
                                                 {% else %}
-                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Event travel</h3>
-                                                <h5>Click the button below to make your booking</h5>
-                                                <a class="btn btn-primary" href="/event">book Now !</a>
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">No Bookings for Event Travel Yet</h2>
+                                                    <p class="empty-booking-subtitle">Don't miss out on your next adventure!</p>
+                                                    <p class="empty-booking-description">It appears that you haven't made any bookings for event travel. Take action now and secure your travel plans for the upcoming event.</p>
+                                                    <a class="btn btn-primary" href="/eventservice">Book Now</a>
+                                                </section>
                                                 {% endif %}
                                                 </tbody>
                                             </table>
@@ -334,7 +343,7 @@
                                                         {% elif data.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     
@@ -342,9 +351,12 @@
                                                 </tr>
                                                 {% endfor %}
                                                 {% else %}
-                                                <h3 style="margin-top: 30px;">You have not yet made any bookings for Parcel Sending</h3>
-                                                <h5>Click the button below to make your booking</h5>
-                                                <a class="btn btn-primary" href="/parcel">book Now !</a>
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">No Bookings for Parcel Sending Yet</h2>
+                                                    <p class="empty-booking-subtitle">Don't wait any longer!</p>
+                                                    <p class="empty-booking-description">It looks like you haven't made any bookings for parcel sending yet. Take the first step now and book your parcel delivery with us.</p>
+                                                    <a class="btn btn-primary" href="/parcelservice">Book Now</a>
+                                                </section>
                                                 {% endif %}
                                                 </tbody>
                                             </table>
@@ -406,7 +418,7 @@
                                                         {% elif bookings.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-center">
@@ -455,7 +467,7 @@
                                                         {% elif row.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-center">
@@ -504,7 +516,7 @@
                                                         {% elif data.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-center">
@@ -555,7 +567,7 @@
                                                         {% elif data.status=="Declined" %}
                                                         <i class="fas fa-circle text-c-red f-10"></i>
                                                         {% else %}
-                                                        <i class="fas fa-circle text-c-purple f-10"></i>
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
                                                         {% endif %}
                                                     </td>
                                                     <td class="text-center">
