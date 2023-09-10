@@ -6,7 +6,7 @@
                 <div class="b-bg">
                     <img src="{{ url_for('static',filename='assets/images/mat.jpg') }}" width="40px" height="40px" style="border-radius: 5px;" alt="">
                 </div>
-                <span class="b-title">Travel Bila Was</span>
+                <span class="b-title"><strong>Travel Bila Was</strong></span>
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
         </div>
@@ -22,7 +22,7 @@
                 </li>
                 <li data-username="Profile Page" 
                     class="nav-item {% if 'profile' in segment %} active {% endif %}">
-                    <a href="/profile.html" class="nav-link">
+                    <a href="/profile" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-user"></i></span>
                             <span class="pcoded-mtext">Profile Page</span></a>
                 </li>                
@@ -34,10 +34,10 @@
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-box"></i></span><span
                             class="pcoded-mtext">Our Services</span></a>
                     <ul class="pcoded-submenu">
-                        <li class=""><a href="/solo-travel.html" class="">Solo Travel</a></li>
-                        <li class=""><a href="/event-travel.html" class="">Event Travel</a></li>
-                        <li class=""><a href="/student-travel.html" class="">Institutional Travel</a></li>
-                        <li class=""><a href="/parcel-transport.html" class="">Parcel Travel</a></li>
+                        <li class=""><a href="/soloservice" class="">Solo Travel</a></li>
+                        <li class=""><a href="/eventservice" class="">Event Travel</a></li>
+                        <li class=""><a href="/studentservice" class="">Institutional Travel</a></li>
+                        <li class=""><a href="/parcelservice" class="">Parcel Travel</a></li>
                     </ul>
                 </li>
                 <!-- <li class="nav-item pcoded-menu-caption">
@@ -54,22 +54,23 @@
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span
                             class="pcoded-mtext">Authentication</span></a>
                     <ul class="pcoded-submenu">
-                        <li class=""><a href="/register.html" class="" target="_blank">Register</a></li>
-                        <li class=""><a href="/login.html" class="" target="_blank">Login</a></li>
+                        <li class=""><a href="/register" class="" target="_blank">Register</a></li>
+                        <li class=""><a href="/login" class="" target="_blank">Login</a></li>
                     </ul>
                 </li>
                 {% endif %}
 
-                <li data-username="Sample Page" class="nav-item"><a href="/page-blank.html" class="nav-link"><span
+                <li data-username="Sample Page" class="nav-item"><a href="/home" class="nav-link"><span
                         class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Explore</span></a>
                 </li>
 
                 <li data-username="Disabled Menu" class="nav-item">
                     <a href="{{ url_for('authentication_blueprint.logout') }}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Logout</span>
-                    </a>Travel Bila Was
+                    </a>
                 </li>               
             </ul>
+            
         </div>
     </div>
 </nav>
