@@ -1,9 +1,4 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
-from flask import render_template, redirect, request, url_for
+from flask import Flask,render_template, redirect, request, url_for
 from flask_login import (
     current_user,
     login_user,
@@ -17,9 +12,30 @@ from flask_login import current_user, login_required
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
 from apps.authentication.models import User,Solos,Event,Institution,Parcel,Profile
+from apps.authentication.util import hash_pass
+
 
 
 from apps.authentication.util import verify_pass
+from flask_mail import Mail, Message
+
+from random import *
+import time
+import secrets
+
+app=Flask(__name__)
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'bilawastravel@gmail.com'
+app.config['MAIL_PASSWORD'] = 'plgqeysfehioxcmg'
+
+Mail=Mail(app)
+
+
 
 @blueprint.route('/')
 def route_default():
@@ -72,7 +88,14 @@ def login():
     if not current_user.is_authenticated:
         return render_template('accounts/login.html',
                                form=login_form)
-    return redirect(url_for('authentication_blueprint.explore'))
+    else:
+        record = User.query.filter_by(is_verified=1).first()
+        if record:
+            return redirect(url_for('authentication_blueprint.explore'))
+        else:
+            msgs="Please verify your email before logging in."
+            return render_template('home/email_verify.html',msgs=msgs)
+    
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -82,6 +105,10 @@ def register():
 
         username = request.form['username']
         email = request.form['email']
+        is_verified=0
+        otp=str(secrets.randbelow(1000000)).zfill(6)
+        otp_secret=otp
+        verification_sent_at = int(time.time())
 
         # Check usename exists
         user = User.query.filter_by(username=username).first()
@@ -100,20 +127,78 @@ def register():
                                    form=create_account_form)
 
         # else we can create the user
-        user = User(**request.form)
+        send_verification(email, otp)
+        user = User(**request.form,verification_sent_at=verification_sent_at,is_verified=is_verified,otp_secret=otp_secret)
         db.session.add(user)
         db.session.commit()
 
         # Delete user from session
         logout_user()
 
-        return render_template('accounts/register.html',
+        return render_template('home/email_verify.html',
                                msg='User created successfully.',
                                success=True,
                                form=create_account_form)
 
     else:
         return render_template('accounts/register.html', form=create_account_form)
+
+
+def send_verification(email, otp):
+    subject = 'Email Verification code'
+    msg = Message(subject=subject, sender='bilawastravel@gmail.com', recipients=[email])
+    msg.body = f'Your verification code is: {otp}'
+    try:
+        Mail.send(msg)
+    except Exception as e:
+        print("Error sending email:", e)
+
+
+@blueprint.route('/email_verification',methods=['POST','GET'])
+def email_verify():
+    if request.method == 'POST':
+        user_otp = request.form['otp']
+        user=User.query.filter_by(otp_secret=user_otp).first()
+        if user is not None:
+            is_verified = int(user.otp_secret)  
+            if is_verified == 1:
+                success="Email has already been verified. You can now login."
+                return redirect(url_for('authentication_blueprint.login'),success=success)
+            else:
+                verification_sent_at = user.verification_sent_at
+                current_timestamp = int(time.time())
+                expiration_time =24 * 60 * 60
+
+                if current_timestamp - verification_sent_at > expiration_time:
+                    user=User.query.filter_by(otp_secret=user_otp).first()
+                    try:
+                        db.session.add(new_profile)
+                        db.session.commit()
+                    except Exception as e:
+                        print("Error:", str(e))
+                        db.session.rollback()
+                    msg="Verification email has expired. Account  deleted."
+                    return redirect(url_for('authentication_blueprint.register'))
+
+                record=User.query.filter_by(otp_secret=user_otp).first()
+                is_verified = 1
+
+                if record is not None:
+                    record.is_verified = is_verified
+                    try:
+                        db.session.commit()
+                        flash('Email verified successfully now can login.','success')
+                        return redirect(url_for('home_blueprint.login'))
+                    except Exception as e:
+                        print("Error:", str(e))
+                        db.session.rollback()
+
+                    
+        else:
+            msg="You have entered an invalid code."
+            return render_template('home/email_verify.html',msg=msg)
+    return render_template('home/email_verify.html')
+
 
 
 @blueprint.route('/logout')
@@ -462,3 +547,75 @@ def Payment(id,table):
         data= Profile.query.filter_by(username=current_user.username).first()
 
     return render_template('home/pay.html',record=record,data=data)
+
+
+
+
+@blueprint.route('/forgot',methods=['POST','GET'])
+def forgot():
+    if request.method=='POST':
+            email=request.form['email']
+            result=User.query.filter_by(email=email).first()
+            if result:
+                token=secrets.token_hex(32)
+                reset_link=url_for('authentication_blueprint.reset',token=token,_external=True)
+                msg=Message(subject='Password Reset Request',sender='bilawastravel@gmail.com',recipients=[email])
+                msg.body=f'Click the following link to reset your password:{reset_link}'
+                Mail.send(msg)
+                reset_sent_at = int(time.time())
+                record=User.query.filter_by(email=email).first()
+                record.token=token
+                record.reset_sent_at=reset_sent_at
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+                success="Reset link send to your email"
+                return render_template('home/forgot.html',success=success)
+            else:
+                msg="We can't find your email in our system"
+                return render_template('home/forgot.html',msg=msg)
+    return render_template('home/forgot.html')
+
+
+
+@blueprint.route('/reset',methods=['POST','GET'])
+def reset():
+    if request.method=='POST':
+        password=request.form['password']
+        re_password=request.form['confirm']
+        token = request.args.get('token') 
+        if password != re_password:
+            msg="Passwords do not match"
+            return redirect(url_for('authentication_blueprint.reset',msg=msg,token=token))
+        
+        result=User.query.filter_by(token=token).first()
+        if result:
+            reset_sent_at = result.reset_sent_at
+            user_id=result.id
+
+        
+            current_timestamp = int(time.time())
+            expiration_time = 15 * 60
+            if current_timestamp - reset_sent_at > expiration_time:
+                msg="The token has expired token"
+                return render_template('home/forgot.html',msg=msg)
+
+            hashed_password=hash_pass(password)
+            record=User.query.filter_by(id=user_id).first()
+            if record:
+                record.password=hashed_password
+                record.token="token"
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    print("Error:", str(e))
+                    db.session.rollback()
+                success="Password reset successfully"
+                return redirect(url_for('authentication_blueprint.login',success=success))
+                
+        else:
+            msg="Invalid or expired token"
+            return redirect(url_for('authentication_blueprint.forgot',msg=msg)) 
+    return render_template('home/reset.html')
