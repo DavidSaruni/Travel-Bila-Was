@@ -14,13 +14,18 @@ from apps.authentication.util import hash_pass
 
 class User(db.Model, UserMixin):
 
-    __tablename__ = 'user'
+    __tablename__ = 'user12'
 
     id            = db.Column(db.Integer, primary_key=True)
     role          = db.Column(db.String(30),default="Customer")
     username      = db.Column(db.String(64), unique=True)
     email         = db.Column(db.String(64), unique=True)
     password      = db.Column(db.LargeBinary)
+    otp_secret      = db.Column(db.String(200),default="otp")
+    is_verified      = db.Column(db.Integer,default=0)
+    verification_sent_at= db.Column(db.Integer,default=0)
+    token            = db.Column(db.String(154),default="token")
+    reset_sent_at= db.Column(db.Integer,default=0) 
 
     oauth_github  = db.Column(db.String(100), nullable=True)
 
@@ -86,7 +91,7 @@ def request_loader(request):
     return user if user else None
 
 class OAuth(OAuthConsumerMixin, db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="cascade"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user12.id", ondelete="cascade"), nullable=False)
     user = db.relationship(User)
 
 
@@ -95,7 +100,7 @@ class Solos(db.Model):
     __tablename__ = 'trip'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user12.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     Seats         = db.Column(db.Integer)
@@ -122,7 +127,7 @@ class Event(db.Model):
     __tablename__ = 'event_table'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user12.username'), nullable=False)
     event_type       = db.Column(db.String(64))
     location   = db.Column(db.String(100))
     Destination   = db.Column(db.String(100))
@@ -152,7 +157,7 @@ class Institution(db.Model):
     __tablename__ = 'institution_table'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user12.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     Seats         = db.Column(db.Integer)
@@ -180,7 +185,7 @@ class Parcel(db.Model):
     __tablename__ = 'parcel_tables'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user12.username'), nullable=False)
     Pick_Up       = db.Column(db.String(64))
     Destination   = db.Column(db.String(100))
     photo         =db.Column(db.BLOB)
@@ -206,8 +211,8 @@ class Profile(db.Model):
     __tablename__ = 'profile_table'
 
     id            = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), db.ForeignKey('user.username'), nullable=False)
-    email         = db.Column(db.String(64), db.ForeignKey('user.email'), nullable=False)
+    username      = db.Column(db.String(64), db.ForeignKey('user12.username'), nullable=False)
+    email         = db.Column(db.String(64), db.ForeignKey('user12.email'), nullable=False)
     firstName     = db.Column(db.String(64))
     lastName      = db.Column(db.String(100))
     address       = db.Column(db.String(100))
